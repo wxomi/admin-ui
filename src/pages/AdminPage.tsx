@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from "react";
 import ApiService from "../services/ApiService";
 import SearchBar from "../components/SearchBar";
-
-interface Member {
-  id: number;
-  name: string;
-  email: string;
-  role: string;
-}
+import Pagination from "../components/Pagination";
+import Table from "../components/Table";
+import Member from "../interfaces/Member";
 
 const AdminPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -23,6 +19,7 @@ const AdminPage: React.FC = () => {
     ApiService.getMembers()
       .then((members) => {
         console.log(members);
+        setMembers(members);
       })
       .catch((error) => {
         console.log(error);
@@ -47,9 +44,35 @@ const AdminPage: React.FC = () => {
     setCurrentPage(1);
   };
 
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const renderTable = () => {
+    const startIndex = (currentPage - 1) * 10;
+    const endIndex = startIndex + 10;
+    const currentData = filteredMembers.slice(startIndex, endIndex);
+
+    return <Table data={currentData} />;
+  };
+
+  const renderPagination = () => {
+    const totalPages = Math.ceil(filteredMembers.length / 10);
+
+    return (
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
+    );
+  };
+
   return (
     <div>
       <SearchBar searchTerm={searchTerm} onSearchChange={handleSearchChange} />
+      {renderTable()}
+      {renderPagination()}
     </div>
   );
 };
