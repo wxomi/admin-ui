@@ -10,6 +10,8 @@ const AdminPage: React.FC = () => {
   const [members, setMembers] = useState<Array<Member>>([]);
   const [filteredMembers, setfilteredMembers] = useState<Array<Member>>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [editRowId, setEditRowId] = useState(-1);
 
   useEffect(() => {
     fetchMembers();
@@ -20,6 +22,7 @@ const AdminPage: React.FC = () => {
       .then((members) => {
         console.log(members);
         setMembers(members);
+        setfilteredMembers(members);
       })
       .catch((error) => {
         console.log(error);
@@ -48,12 +51,28 @@ const AdminPage: React.FC = () => {
     setCurrentPage(pageNumber);
   };
 
+  const handleDelete = (id: number) => {
+    filteredMembers.filter((member) => member.id !== id);
+  };
+
+  const handleEdit = (id: number) => {
+    const index = filteredMembers.findIndex((member) => member.id === id);
+  };
+
   const renderTable = () => {
     const startIndex = (currentPage - 1) * 10;
     const endIndex = startIndex + 10;
     const currentData = filteredMembers.slice(startIndex, endIndex);
 
-    return <Table data={currentData} />;
+    return (
+      <Table
+        data={currentData}
+        onDelete={handleDelete}
+        setFilteredMembers={setfilteredMembers}
+        editRowId={editRowId}
+        setEditRowId={setEditRowId}
+      />
+    );
   };
 
   const renderPagination = () => {
