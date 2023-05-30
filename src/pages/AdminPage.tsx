@@ -11,7 +11,7 @@ const AdminPage: React.FC = () => {
   const [members, setMembers] = useState<Array<Member>>([]);
   const [filteredMembers, setfilteredMembers] = useState<Array<Member>>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedRows, setSelectedRows] = useState([]);
+  const [selectedRows, setSelectedRows] = useState<Array<number>>([]);
   const [editRowId, setEditRowId] = useState<number>(-1);
 
   useEffect(() => {
@@ -59,6 +59,15 @@ const AdminPage: React.FC = () => {
     setfilteredMembers(filteredData);
   };
 
+  const deleteSelected = () => {
+    const filteredData = filteredMembers.filter(
+      (member) => !selectedRows.includes(member.id)
+    );
+
+    setfilteredMembers(filteredData);
+    setSelectedRows([]);
+  };
+
   const renderTable = () => {
     const startIndex = (currentPage - 1) * 10;
     const endIndex = startIndex + 10;
@@ -72,6 +81,9 @@ const AdminPage: React.FC = () => {
           setMembers,
           members,
           handleDelete,
+          setSelectedRows,
+          setfilteredMembers,
+          searchTerm,
         }}
       >
         <Table data={currentData} />
@@ -95,6 +107,7 @@ const AdminPage: React.FC = () => {
       <SearchBar searchTerm={searchTerm} onSearchChange={handleSearchChange} />
       {renderTable()}
       {renderPagination()}
+      <button onClick={deleteSelected}>Delete Selected</button>
     </div>
   );
 };

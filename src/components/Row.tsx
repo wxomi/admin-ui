@@ -16,7 +16,15 @@ const Row: React.FC<RowProps> = ({ member }) => {
     return <div>Loading...</div>;
   }
 
-  const { editRowId, setEditRowId, setMembers, handleDelete } = contextValue;
+  const {
+    editRowId,
+    setEditRowId,
+    setMembers,
+    handleDelete,
+    setSelectedRows,
+    searchTerm,
+    setfilteredMembers,
+  } = contextValue;
 
   const handleNameChange = (name: string) => {
     setName(name);
@@ -29,19 +37,52 @@ const Row: React.FC<RowProps> = ({ member }) => {
   const handleRoleChange = (role: string) => {
     setRole(role);
   };
-
   const handleSave = () => {
     setEditRowId(-1);
-
     setMembers((prevMembers) =>
       prevMembers.map((member) =>
         member.id === editRowId ? { ...member, name, email, role } : member
       )
     );
+
+    setfilteredMembers((prevFilteredMembers) => {
+      const updatedFilteredMembers = prevFilteredMembers.map((member) =>
+        member.id === editRowId ? { ...member, name, email, role } : member
+      );
+
+      if (!searchTerm) {
+        return updatedFilteredMembers;
+      }
+
+      return updatedFilteredMembers.filter((member) => {
+        const { id, name, email, role } = member;
+        const searchLower = searchTerm.toLowerCase();
+        return (
+          id.toString().includes(searchLower) ||
+          name.toLowerCase().includes(searchLower) ||
+          email.toLowerCase().includes(searchLower) ||
+          role.toLowerCase().includes(searchLower)
+        );
+      });
+    });
   };
 
   return (
     <tr key={member.id}>
+      <td>
+        <input
+          type="checkbox"
+          onClick={() => {
+            setSelectedRows((prevSelectedRows) => {
+              if (prevSelectedRows.includes(member.id)) {
+                return prevSelectedRows.filter((id) => id !== member.id);
+              } else {
+                return [...prevSelectedRows, member.id];
+              }
+            });
+          }}
+        />
+      </td>
       <td>{member.id}</td>
       <td>
         {editRowId === member.id ? (
@@ -78,7 +119,7 @@ const Row: React.FC<RowProps> = ({ member }) => {
       </td>
       <td>
         {editRowId === member.id ? (
-          <button onClick={() => handleSave()}>Save</button>
+          <button onClick={handleSave}>Save</button>
         ) : (
           <button onClick={() => setEditRowId(member.id)}>Edit</button>
         )}

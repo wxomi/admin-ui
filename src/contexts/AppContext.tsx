@@ -7,6 +7,9 @@ interface AppContextValue {
   setMembers: React.Dispatch<React.SetStateAction<Array<Member>>>;
   members: Array<Member>;
   handleDelete: (id: number) => void;
+  setSelectedRows: React.Dispatch<React.SetStateAction<Array<number>>>;
+  searchTerm: string;
+  setfilteredMembers: React.Dispatch<React.SetStateAction<Array<Member>>>;
 }
 
 export const AppContext = createContext<AppContextValue | null>(null);
