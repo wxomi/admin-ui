@@ -53,7 +53,10 @@ const AdminPage: React.FC = () => {
   };
 
   const handleDelete = (id: number) => {
-    filteredMembers.filter((member) => member.id !== id);
+    const filteredData: Member[] = filteredMembers.filter(
+      (member) => member.id !== id
+    );
+    setfilteredMembers(filteredData);
   };
 
   const renderTable = () => {
@@ -68,6 +71,7 @@ const AdminPage: React.FC = () => {
           setEditRowId,
           setMembers,
           members,
+          handleDelete,
         }}
       >
         <Table data={currentData} />

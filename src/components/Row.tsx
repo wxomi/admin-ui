@@ -16,7 +16,7 @@ const Row: React.FC<RowProps> = ({ member }) => {
     return <div>Loading...</div>;
   }
 
-  const { editRowId, setEditRowId, setMembers } = contextValue;
+  const { editRowId, setEditRowId, setMembers, handleDelete } = contextValue;
 
   const handleNameChange = (name: string) => {
     setName(name);
@@ -82,7 +82,7 @@ const Row: React.FC<RowProps> = ({ member }) => {
         ) : (
           <button onClick={() => setEditRowId(member.id)}>Edit</button>
         )}
-        <button /*onClick={() => handleDelete(member.id)}*/>Delete</button>
+        <button onClick={() => handleDelete(member.id)}>Delete</button>
       </td>
     </tr>
   );
