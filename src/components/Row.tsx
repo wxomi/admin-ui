@@ -16,13 +16,7 @@ const Row: React.FC<RowProps> = ({ member }) => {
     return <div>Loading...</div>;
   }
 
-  const {
-    editRowId,
-    setEditRowId,
-    setSearchTerm,
-    setMembers,
-    setfilteredMembers,
-  } = contextValue;
+  const { editRowId, setEditRowId, setMembers } = contextValue;
 
   const handleNameChange = (name: string) => {
     setName(name);
@@ -38,18 +32,12 @@ const Row: React.FC<RowProps> = ({ member }) => {
 
   const handleSave = () => {
     setEditRowId(-1);
-    setSearchTerm("");
 
     setMembers((prevMembers) =>
       prevMembers.map((member) =>
         member.id === editRowId ? { ...member, name, email, role } : member
       )
     );
-    // setfilteredMembers((prevMembers) =>
-    //   prevMembers.map((member) =>
-    //     member.id === editRowId ? { ...member, name, email, role } : member
-    //   )
-    // );
   };
 
   return (

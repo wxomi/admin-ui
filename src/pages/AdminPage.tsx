@@ -66,10 +66,8 @@ const AdminPage: React.FC = () => {
         value={{
           editRowId,
           setEditRowId,
-          setSearchTerm,
           setMembers,
           members,
-          setfilteredMembers,
         }}
       >
         <Table data={currentData} />
