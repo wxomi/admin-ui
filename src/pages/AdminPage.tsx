@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import ApiService from "../services/ApiService";
-import SearchBar from "../components/SearchBar";
 import Pagination from "../components/Pagination";
+import SearchBar from "../components/SearchBar";
 import Table from "../components/Table";
-import Member from "../interfaces/Member";
 import { AppContext } from "../contexts/AppContext";
+import Member from "../interfaces/Member";
+import ApiService from "../services/ApiService";
 
 const AdminPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -65,7 +65,20 @@ const AdminPage: React.FC = () => {
     );
 
     setfilteredMembers(filteredData);
+
     setSelectedRows([]);
+  };
+
+  const selectAllOfThatPage = () => {
+    if (selectedRows.length === 10) {
+      setSelectedRows([]);
+      return;
+    }
+    const startIndex = (currentPage - 1) * 10;
+    const endIndex = startIndex + 10;
+    const currentData = filteredMembers.slice(startIndex, endIndex);
+    const currentIds = currentData.map((member) => member.id);
+    setSelectedRows(currentIds);
   };
 
   const renderTable = () => {
@@ -84,9 +97,10 @@ const AdminPage: React.FC = () => {
           setSelectedRows,
           setfilteredMembers,
           searchTerm,
+          selectedRows,
         }}
       >
-        <Table data={currentData} />
+        <Table data={currentData} selectAllRows={selectAllOfThatPage} />
       </AppContext.Provider>
     );
   };

@@ -24,6 +24,7 @@ const Row: React.FC<RowProps> = ({ member }) => {
     setSelectedRows,
     searchTerm,
     setfilteredMembers,
+    selectedRows,
   } = contextValue;
 
   const handleNameChange = (name: string) => {
@@ -72,6 +73,7 @@ const Row: React.FC<RowProps> = ({ member }) => {
       <td>
         <input
           type="checkbox"
+          checked={selectedRows.includes(member.id)}
           onClick={() => {
             setSelectedRows((prevSelectedRows) => {
               if (prevSelectedRows.includes(member.id)) {
