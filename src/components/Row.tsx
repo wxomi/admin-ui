@@ -25,6 +25,7 @@ const Row: React.FC<RowProps> = ({ member }) => {
     searchTerm,
     setfilteredMembers,
     selectedRows,
+    members,
   } = contextValue;
 
   const handleNameChange = (name: string) => {
@@ -40,32 +41,24 @@ const Row: React.FC<RowProps> = ({ member }) => {
   };
   const handleSave = () => {
     setEditRowId(-1);
-    setMembers((prevMembers) =>
-      prevMembers.map((member) =>
-        member.id === editRowId ? { ...member, name, email, role } : member
-      )
+    const editMember = { ...member, name, email, role };
+    const editedMembers = members.map((member) =>
+      member.id === editRowId ? editMember : member
     );
 
-    setfilteredMembers((prevFilteredMembers) => {
-      const updatedFilteredMembers = prevFilteredMembers.map((member) =>
-        member.id === editRowId ? { ...member, name, email, role } : member
-      );
+    setMembers(editedMembers);
 
-      if (!searchTerm) {
-        return updatedFilteredMembers;
-      }
-
-      return updatedFilteredMembers.filter((member) => {
+    setfilteredMembers(
+      editedMembers.filter((member) => {
         const { id, name, email, role } = member;
-        const searchLower = searchTerm.toLowerCase();
         return (
-          id.toString().includes(searchLower) ||
-          name.toLowerCase().includes(searchLower) ||
-          email.toLowerCase().includes(searchLower) ||
-          role.toLowerCase().includes(searchLower)
+          id.toString().includes(searchTerm) ||
+          name.toLowerCase().includes(searchTerm) ||
+          email.toLowerCase().includes(searchTerm) ||
+          role.toLowerCase().includes(searchTerm)
         );
-      });
-    });
+      })
+    );
   };
 
   return (
